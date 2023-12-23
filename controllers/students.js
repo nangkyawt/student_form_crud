@@ -1,38 +1,29 @@
 const db = require("../models/index");
 const catchasync = require("../utils/catchasync");
 const APIfeatures = require("../utils/apifeatures");
+const AppError = require("../utils/apperror");
 const students = db.students;
 
 //CREATE
-exports.create = (req, res) => {
+exports.create = catchasync(async (req, res, next) => {
   if (!req.body.name) {
-    return res.status(400).send({
-      message: "Name cannot be empty!",
-    });
+    return next(new AppError("Please enter your name", 400));
   }
-  students
-    .create({
-      name: req.body.name,
-      father_name: req.body.father_name,
-      date_of_birth: req.body.date_of_birth,
-      gender: req.body.gender,
-      nrc_exists: req.body.nrc_exists,
-      nrc: req.body.nrc,
-    })
-    .then((data) => {
-      return res.status(201).send({
-        status: "success",
-        message: "Successfully created a post.",
-        data: data,
-      });
-    })
-    .catch((err) => {
-      return res.status(500).send({
-        status: "fail",
-        message: err.message || "Some error occurred while creating a post",
-      });
-    });
-};
+  console.log(req.body.name);
+  const Students = await students.create({
+    name: req.body.name,
+    father_name: req.body.father_name,
+    date_of_birth: req.body.date_of_birth,
+    gender: req.body.gender,
+    nrc_exists: req.body.nrc_exists,
+    nrc: req.body.nrc,
+  });
+  res.status(201).send({
+    status: "success",
+    message: "Successfully created a post.",
+    Students: Students,
+  });
+});
 
 //UPDATE
 exports.update = (req, res) => {
