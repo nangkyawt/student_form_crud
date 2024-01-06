@@ -3,7 +3,8 @@ const studentsCtrl = require("../controllers/students");
 
 module.exports = (app) => {
   const router = express.Router();
-  router.route("/").post(studentsCtrl.create);
-  router.patch("/:id", studentsCtrl.update).delete(studentsCtrl.delete);
+  router.route("/").post(studentsCtrl.create).get(studentsCtrl.findAll);
+  // router.post("/bulkcreate", studentsCtrl.createBulk);
+  router.patch("/:id", studentsCtrl.update).delete("/:id", studentsCtrl.delete);
   app.use("/api/v1/students", router);
 };
