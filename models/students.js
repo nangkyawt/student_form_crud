@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const students = sequelize.define("students", {
+  const students = sequelize.define("Student", {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
@@ -12,7 +12,8 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
     date_of_birth: {
-      type: Sequelize.DATE,
+      type: Sequelize.DATEONLY,
+      allowNull: false,
     },
     gender: {
       type: Sequelize.BOOLEAN,

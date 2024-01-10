@@ -5,35 +5,43 @@ const AppError = require("../utils/apperror");
 const students = db.students;
 
 // Import Excel
-// exports.createBulk = async (req, res) => {
-//   try {
-//     if (!req.body || !Array.isArray(req.body)) {
-//       return res.status(400).send({
-//         status: "Fail",
-//         message: "Invalid or empty request body for bulk insertion",
-//       });
-//     }
-//     // Bulk Insert
-//     const createdStudents = await students.bulkCreate(req.body);
-//     res.status(201).send({
-//       status: "Success",
-//       message: "Bulk insertion successful",
-//       data: createdStudents,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(400).send({
-//       status: "Fail",
-//       message: "Error occurred during bulk insertion" || error.message,
-//     });
-//   }
-// };
+exports.createBulk = async (req, res) => {
+  try {
+    if (!req.body || !Array.isArray(req.body)) {
+      return res.status(400).send({
+        status: "Fail",
+        message: "Invalid or empty request body for bulk insertion",
+      });
+    }
+    // Bulk Insert
+    const createdStudents = await students.bulkCreate(req.body);
+    res.status(201).send({
+      status: "Success",
+      message: "Bulk insertion successful",
+      data: createdStudents,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400).send({
+      status: "Fail",
+      message: "Error occurred during bulk insertion" || error.message,
+    });
+  }
+};
 
 //CREATE
 exports.create = catchasync(async (req, res, next) => {
-  if (!req.body.name) {
-    return next(new AppError("Please enter your name", 400));
+  // Existing Student
+  const existingStudent = await students.findOne({
+    where: { id: req.body.id },
+  });
+  if (existingStudent) {
+    return res.status(400).send({
+      status: "Fail",
+      message: "Student ID already exists",
+    });
   }
+
   console.log(req.body.father_name);
   const Students = await students.create({
     id: req.body.id,
@@ -51,6 +59,49 @@ exports.create = catchasync(async (req, res, next) => {
   });
 });
 
+// exports.create = async (req, res) => {
+//   console.log(req.body);
+//   if (!req.body.Name) {
+//     return res.status(404).send({
+//       message: "Please enter your name",
+//     });
+//   }
+//   const existingStudent = await students.findOne({
+//     where: { id: req.body.id },
+//   });
+//   if (existingStudent) {
+//     return res.status(400).send({
+//       status: "Fail",
+//       message: "Student ID already exists",
+//     });
+//   }
+//   console.log(req.body.father_name);
+
+//   students
+//     .create({
+//       id: req.body.id,
+//       name: req.body.name,
+//       father_name: req.body.father_name,
+//       date_of_birth: req.body.date_of_birth,
+//       gender: req.body.gender,
+//       nrc_exists: req.body.nrc_exists,
+//       nrc: req.body.nrc,
+//     })
+//     .then((data) => {
+//       res.status(201).send({
+//         status: "Success",
+//         message: "Successfully created",
+//         Students: students,
+//       });
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.status(400).send({
+//         status: "Fail",
+//         message: "Some error occoured while creating a user" || err.message,
+//       });
+//     });
+// };
 //GetAll
 exports.findAll = (req, res) => {
   const Students = req.query;
