@@ -196,7 +196,7 @@ exports.delete = (req, res) => {
 //     });
 // };
 exports.deleteAll = catchasync(async (req, res, next) => {
-  Posform.destroy({
+  students.destroy({
     where: {},
     truncate: false,
   });
