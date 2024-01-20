@@ -1,28 +1,36 @@
 const db = require("../models/index");
 const catchasync = require("../utils/catchasync");
 const ExamResults = db.examresults;
-
-const subjects = [
-  "Myanmar",
-  "English",
-  "Mathematics",
-  "Chemistry",
-  "Physics",
-  "Bio_Eco",
-];
+const Students = db.students;
 
 // CREATE
 exports.save = catchasync(async (req, res, next) => {
-  var results = "";
-  subjects.forEach((subject) => {
-    const subjectMarks = req.body[subject];
-    if (subjectMarks >= 40) {
-      return (results = "Passed");
+  const subjectMarks = {
+    Myanmar: req.body.Myanmar,
+    English: req.body.English,
+    Mathematics: req.body.Mathematics,
+    Chemistry: req.body.Chemistry,
+    Physics: req.body.Physics,
+    Bio_Eco: req.body.Bio_Eco,
+  };
+  function markStatus(subjectMarks) {
+    const results = {};
+
+    for (const subject in subjectMarks) {
+      if (subjectMarks.hasOwnProperty(subject)) {
+        const mark = subjectMarks[subject];
+        results[subject] = {
+          mark,
+          status: mark >= 40 ? "Passed" : "Failed",
+        };
+      }
     }
-    if (subjectMarks < 40) {
-      return (results = "Failed");
-    }
-  });
+
+    return results;
+  }
+  const subjectResults = markStatus(subjectMarks);
+  console.log(subjectResults);
+  let Result = true;
   const totalMarks =
     req.body.Myanmar +
     req.body.English +
@@ -30,12 +38,20 @@ exports.save = catchasync(async (req, res, next) => {
     req.body.Chemistry +
     req.body.Physics +
     req.body.Bio_Eco;
-  // console.log(">>>>>>>>>");
-  // console.log(results);
-  // console.log(totalMarks);
-  // console.log(req.body.ExamResults);
+  console.log(subjectMarks);
+
+  for (const subject in subjectResults) {
+    if (subjectResults.hasOwnProperty(subject)) {
+      const result = subjectResults[subject];
+      if (result.status === "Failed") {
+        Result = false; // Set Result to false if any subject is failed
+        break; // No need to continue checking if a failure is found
+      }
+    }
+  }
   console.log(">>>>>>>");
   const examResults = await ExamResults.create({
+    id: req.body.id,
     SchoolYear: req.body.SchoolYear,
     Myanmar: req.body.Myanmar,
     English: req.body.English,
@@ -44,8 +60,9 @@ exports.save = catchasync(async (req, res, next) => {
     Physics: req.body.Physics,
     Bio_Eco: req.body.Bio_Eco,
     Total: totalMarks,
-    Result: results == "Passed" ? true : false,
+    Result: Result,
   });
+  console.log(" >>>>>>>>>>>>><<<<<<<<<<<<<<<<");
   res.status(201).send({
     status: "Success",
     message: "Successfully created a post.",
@@ -132,3 +149,23 @@ exports.deleteAll = catchasync(async (req, res, next) => {
     message: "Delete successfully",
   });
 });
+
+//Get
+exports.get = async (req, res) => {
+  const id = req.params.id;
+  const data = await Students.findAll({
+    include: [
+      {
+        model: ExamResults,
+        as: "Result",
+      },
+    ],
+    where: {
+      id: id,
+    },
+  });
+  res.status(201).send({
+    status: "Success",
+    data,
+  });
+};

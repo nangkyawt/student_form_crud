@@ -19,4 +19,14 @@ db.sequelize = sequelize;
 db.students = require("./students")(sequelize, Sequelize);
 db.examresults = require("./resultModel")(sequelize, Sequelize);
 
+//Table Relationship
+db.students.hasMany(db.examresults, {
+  foreignKey: "id",
+  as: "Result", //table name
+});
+db.examresults.belongsTo(db.students, {
+  foreignKey: "id",
+  as: "Student", //table name
+});
+
 module.exports = db;

@@ -1,32 +1,38 @@
 module.exports = (sequelize, Sequelize) => {
-  const examresults = sequelize.define("abc", {
+  const examresults = sequelize.define("Result", {
+    Result_id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      notEmpty: true,
+      autoIncrement: true,
+    },
     SchoolYear: {
       type: Sequelize.STRING,
       allowNull: false,
     },
     Myanmar: {
       type: Sequelize.INTEGER,
-      defaultValue: 0,
+      allowNull: false,
     },
     English: {
       type: Sequelize.INTEGER,
-      defaultValue: 0,
+      allowNull: false,
     },
     Mathematics: {
       type: Sequelize.INTEGER,
-      defaultValue: 0,
+      allowNull: false,
     },
     Chemistry: {
       type: Sequelize.INTEGER,
-      defaultValue: 0,
+      allowNull: false,
     },
     Physics: {
       type: Sequelize.INTEGER,
-      defaultValue: 0,
+      allowNull: false,
     },
     Bio_Eco: {
       type: Sequelize.INTEGER,
-      defaultValue: 0,
+      allowNull: false,
     },
     Total: {
       type: Sequelize.INTEGER,
