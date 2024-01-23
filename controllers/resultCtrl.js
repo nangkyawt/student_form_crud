@@ -150,7 +150,51 @@ exports.deleteAll = catchasync(async (req, res, next) => {
   });
 });
 
+// Import Excel
+exports.createBulk = async (req, res) => {
+  try {
+    if (!req.body || !Array.isArray(req.body)) {
+      return res.status(400).send({
+        status: "Fail",
+        message: "Invalid or empty request body for bulk insertion",
+      });
+    }
+    // Bulk Insert
+    const createdMarks = await ExamResults.bulkCreate(req.body);
+    res.status(201).send({
+      status: "Success",
+      message: "Bulk insertion successful",
+      data: createdMarks,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400).send({
+      status: "Fail",
+      message: "Error occurred during bulk insertion" || error.message,
+    });
+  }
+};
 //Get
+exports.get = async (req, res) => {
+  const id = req.params.id;
+  const data = await Students.findAll({
+    include: [
+      {
+        model: ExamResults,
+        as: "Result",
+      },
+    ],
+    where: {
+      id: id,
+    },
+  });
+  res.status(201).send({
+    status: "Success",
+    data,
+  });
+};
+
+//Delete TB RS
 exports.get = async (req, res) => {
   const id = req.params.id;
   const data = await Students.findAll({

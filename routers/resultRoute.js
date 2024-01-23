@@ -8,6 +8,8 @@ module.exports = (app) => {
     .post(resultCtrl.save)
     .get(resultCtrl.findAll)
     .delete(resultCtrl.deleteAll);
+  resultRouter.post("/bulkcreate", resultCtrl.createBulk);
+
   resultRouter.delete("/:id", resultCtrl.delete).get("/:id", resultCtrl.get);
   app.use("/api/v1/examresults", resultRouter);
 };
