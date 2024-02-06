@@ -33,7 +33,7 @@ exports.createBulk = async (req, res) => {
 exports.create = catchasync(async (req, res, next) => {
   // Existing Student
   const existingStudent = await students.findOne({
-    where: { id: req.body.id },
+    where: { Student_id: req.body.Student_id },
   });
   if (existingStudent) {
     return res.status(400).send({
@@ -42,15 +42,15 @@ exports.create = catchasync(async (req, res, next) => {
     });
   }
 
-  console.log(req.body.father_name);
+  console.log(req.body.Father_Name);
   const Students = await students.create({
-    id: req.body.id,
-    name: req.body.name,
-    father_name: req.body.father_name,
-    date_of_birth: req.body.date_of_birth,
-    gender: req.body.gender,
-    nrc_exists: req.body.nrc_exists,
-    nrc: req.body.nrc,
+    Student_id: req.body.Student_id,
+    Name: req.body.Name,
+    Father_Name: req.body.Father_Name,
+    Date_of_Birth: req.body.Date_of_Birth,
+    Gender: req.body.Gender,
+    Nrc_Exists: req.body.Nrc_Exists,
+    Nrc: req.body.Nrc,
   });
   res.status(201).send({
     status: "success",
@@ -127,7 +127,7 @@ exports.update = (req, res) => {
 
   students
     .update(req.body, {
-      where: { id: id },
+      where: { Student_id: id },
     })
     .then((num) => {
       if (num == 1) {
@@ -152,7 +152,7 @@ exports.delete = (req, res) => {
   const id = req.params.id;
   students
     .destroy({
-      where: { id: id },
+      where: { Student_id: id },
     })
     .then((num) => {
       if (num == 1) {
@@ -205,3 +205,30 @@ exports.deleteAll = catchasync(async (req, res, next) => {
     message: "delete successfully",
   });
 });
+
+exports.findOne = (req, res) => {
+  const id = req.params.id;
+
+  students
+    .findOne({
+      where: { Student_id: id },
+    })
+    .then((student) => {
+      if (student) {
+        res.status(200).send({
+          message: "Student found",
+          data: student,
+        });
+      } else {
+        res.status(404).send({
+          message: `Cannot find student with id=${id}`,
+        });
+      }
+    })
+    .catch((err) => {
+      console.error(err); // Log the error for debugging purposes
+      res.status(500).send({
+        message: "Error finding student with id=" + id,
+      });
+    });
+};

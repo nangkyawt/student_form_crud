@@ -8,8 +8,15 @@ module.exports = (app) => {
     .post(resultCtrl.save)
     .get(resultCtrl.findAll)
     .delete(resultCtrl.deleteAll);
-  resultRouter.post("/bulkcreate", resultCtrl.createBulk);
+  resultRouter
+    .post("/bulkCreate", resultCtrl.createBulk)
+    .post("/createNewStudentAndMark", resultCtrl.createNewStudentAndMark)
+    .post("/createStudentAndResults", resultCtrl.createStudentAndResults);
 
-  resultRouter.delete("/:id", resultCtrl.delete).get("/:id", resultCtrl.get);
+  resultRouter
+    .delete("/:id", resultCtrl.delete)
+    .get("/:id", resultCtrl.get)
+    .delete("/:id", resultCtrl.deleteAllByStudentId)
+    .patch("/:id", resultCtrl.update);
   app.use("/api/v1/examresults", resultRouter);
 };

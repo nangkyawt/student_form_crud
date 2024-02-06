@@ -1,27 +1,27 @@
 module.exports = (sequelize, Sequelize) => {
-  const students = sequelize.define("Student", {
-    id: {
+  const students = sequelize.define("student_forms", {
+    Student_id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       notEmpty: true,
     },
-    name: {
+    Name: {
       type: Sequelize.STRING,
     },
-    father_name: {
+    Father_Name: {
       type: Sequelize.STRING,
     },
-    date_of_birth: {
+    Date_of_Birth: {
       type: Sequelize.DATEONLY,
       allowNull: false,
     },
-    gender: {
+    Gender: {
       type: Sequelize.BOOLEAN,
     },
-    nrc_exists: {
+    Nrc_Exists: {
       type: Sequelize.BOOLEAN || null,
     },
-    nrc: {
+    Nrc: {
       type: Sequelize.STRING,
     },
   });

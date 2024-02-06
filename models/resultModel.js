@@ -1,11 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const examresults = sequelize.define("Result", {
-    Result_id: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      notEmpty: true,
-      autoIncrement: true,
-    },
+  const examresults = sequelize.define("exam_results", {
     SchoolYear: {
       type: Sequelize.STRING,
       allowNull: false,

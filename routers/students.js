@@ -9,6 +9,9 @@ module.exports = (app) => {
     .get(studentsCtrl.findAll)
     .delete(studentsCtrl.deleteAll);
   router.post("/bulkcreate", studentsCtrl.createBulk);
-  router.patch("/:id", studentsCtrl.update).delete("/:id", studentsCtrl.delete);
+  router
+    .patch("/:id", studentsCtrl.update)
+    .delete("/:id", studentsCtrl.delete)
+    .get("/:id", studentsCtrl.findOne);
   app.use("/api/v1/students", router);
 };
