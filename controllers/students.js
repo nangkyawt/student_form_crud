@@ -1,7 +1,6 @@
 const db = require("../models/index");
 const catchasync = require("../utils/catchasync");
 const APIfeatures = require("../utils/apifeatures");
-const AppError = require("../utils/apperror");
 const students = db.students;
 
 // Import Excel
@@ -173,28 +172,7 @@ exports.delete = (req, res) => {
 };
 
 //DELETE ALL
-// exports.deleteAll = (res, req) => {
-//   students
-//     .destroy({
-//       where: {},
-//     })
-//     .then((num) => {
-//       if (num == 1) {
-//         res.send({
-//           message: "Student was delete successfully!",
-//         });
-//       } else {
-//         res.send({
-//           message: `Cannot delete Student with id=${id}.May be Student was not found!`,
-//         });
-//       }
-//     })
-//     .catch((err) => {
-//       res.status(500).send({
-//         message: "Could not delete Student with id=" + id,
-//       });
-//     });
-// };
+
 exports.deleteAll = catchasync(async (req, res, next) => {
   students.destroy({
     where: {},
